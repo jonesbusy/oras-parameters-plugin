@@ -151,7 +151,7 @@ public class OrasPlatformParameterDefinition extends AbstractOrasParameterDefini
         }
 
         public static PlatformWrapper of(String value, String digest) {
-            String[] parts = value.split("-");
+            String[] parts = value.split("/");
             if (parts.length != 2 && parts.length != 3) {
                 throw new IllegalArgumentException("Invalid platform parameter: " + value);
             }
@@ -190,9 +190,9 @@ public class OrasPlatformParameterDefinition extends AbstractOrasParameterDefini
         @Override
         public @NonNull String toString() {
             if (variant == null) {
-                return "%s-%s".formatted(os, architecture);
+                return "%s/%s".formatted(os, architecture);
             }
-            return "%s-%s-%s".formatted(os, architecture, variant);
+            return "%s/%s/%s".formatted(os, architecture, variant);
         }
     }
 
