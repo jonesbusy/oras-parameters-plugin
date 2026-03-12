@@ -128,26 +128,36 @@ public class OrasPlatformParameterDefinition extends AbstractOrasParameterDefini
 
     /**
      * Wrap a platform for Jelly views and serialization
-     * @param os The OS
-     * @param architecture The architecture
-     * @param variant The variant
      */
-    public record PlatformWrapper(
-            String os, String architecture, @Nullable String variant, String digest) implements Serializable {
-        public @NonNull String getOs() {
-            return os();
+    public static class PlatformWrapper implements Serializable {
+
+        private final String os;
+        private final String architecture;
+        private final @Nullable String variant;
+        private final String digest;
+
+        public PlatformWrapper(String os, String architecture, @Nullable String variant, String digest) {
+            this.os = os;
+            this.architecture = architecture;
+            this.variant = variant;
+            this.digest = digest;
         }
 
-        public @NonNull String getArchitecture() {
-            return architecture();
+        public String getOs() {
+            return os;
         }
 
-        public @Nullable String getVariant() {
-            return variant();
+        public String getArchitecture() {
+            return architecture;
         }
 
-        public @Nullable String getDigest() {
-            return digest();
+        @Nullable
+        public String getVariant() {
+            return variant;
+        }
+
+        public String getDigest() {
+            return digest;
         }
 
         public static PlatformWrapper of(String value, String digest) {

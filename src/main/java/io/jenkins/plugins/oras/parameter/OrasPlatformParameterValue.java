@@ -36,10 +36,10 @@ public class OrasPlatformParameterValue extends AbstractOrasParameterValue {
     public void addExtraVars(Map<String, String> vars) {
         String name = getName();
         OrasPlatformParameterDefinition.PlatformWrapper platform = getPlatform();
-        vars.put(name + "_PLATFORM_OS", platform.os());
-        vars.put(name + "_PLATFORM_ARCH", platform.architecture());
+        vars.put(name + "_PLATFORM_OS", platform.getOs());
+        vars.put(name + "_PLATFORM_ARCH", platform.getArchitecture());
         if (platform.getVariant() != null) {
-            vars.put(name + "_PLATFORM_VARIANT", platform.architecture());
+            vars.put(name + "_PLATFORM_VARIANT", platform.getVariant());
         }
     }
 }
