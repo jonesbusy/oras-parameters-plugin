@@ -14,7 +14,7 @@
   <version>${changelist}</version>
   <packaging>hpi</packaging>
 
-  <name>ORAS Tag Parameter Plugin</name>
+  <name>ORAS Parameters Plugin</name>
   <url>https://github.com/jenkinsci/${project.artifactId}-plugin</url>
   <licenses>
     <license>
