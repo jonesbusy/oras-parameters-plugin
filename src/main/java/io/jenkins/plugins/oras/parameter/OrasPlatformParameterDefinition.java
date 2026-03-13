@@ -113,7 +113,7 @@ public class OrasPlatformParameterDefinition extends AbstractOrasParameterDefini
 
     public PlatformResponse getPlatforms() {
         UsernamePasswordCredentials credentials = resolveCredentials(credentialsId);
-        RegistryClient client = new RegistryClient(credentials);
+        RegistryClient client = new RegistryClient(credentials, insecure);
         ContainerRef ref = ContainerRef.parse(containerRef);
         try {
             return PlatformResponse.of(client, ref);
@@ -245,7 +245,10 @@ public class OrasPlatformParameterDefinition extends AbstractOrasParameterDefini
          */
         @POST
         public FormValidation doTestConnection(
-                @AncestorInPath Item item, @QueryParameter String containerRef, @QueryParameter String credentialsId) {
+                @AncestorInPath Item item,
+                @QueryParameter boolean insecure,
+                @QueryParameter String containerRef,
+                @QueryParameter String credentialsId) {
             if (item != null) {
                 item.checkPermission(Item.CONFIGURE);
             } else {
@@ -256,7 +259,7 @@ public class OrasPlatformParameterDefinition extends AbstractOrasParameterDefini
             }
             try {
                 UsernamePasswordCredentials credentials = resolveCredentials(credentialsId);
-                RegistryClient client = new RegistryClient(credentials);
+                RegistryClient client = new RegistryClient(credentials, insecure);
                 ContainerRef ref = ContainerRef.parse(containerRef);
                 List<ManifestDescriptor> platforms = client.getPlatforms(ref);
                 return FormValidation.ok("Success! Found " + platforms.size() + " platforms.");

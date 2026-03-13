@@ -20,6 +20,7 @@ public abstract class AbstractOrasParameterDefinition extends ParameterDefinitio
 
     protected final String containerRef;
     protected String credentialsId;
+    protected boolean insecure;
 
     protected AbstractOrasParameterDefinition(@NonNull String name, String description, String containerRef) {
         super(name);
@@ -42,9 +43,18 @@ public abstract class AbstractOrasParameterDefinition extends ParameterDefinitio
         return containerRef;
     }
 
+    public boolean isInsecure() {
+        return insecure;
+    }
+
+    @DataBoundSetter
+    public void setInsecure(boolean insecure) {
+        this.insecure = insecure;
+    }
+
     protected ContainerRef getEffectiveReference() {
         UsernamePasswordCredentials credentials = resolveCredentials(credentialsId);
-        RegistryClient client = new RegistryClient(credentials);
+        RegistryClient client = new RegistryClient(credentials, insecure);
         ContainerRef ref = ContainerRef.parse(containerRef);
         return client.getEffectiveReference(ref);
     }
@@ -61,7 +71,7 @@ public abstract class AbstractOrasParameterDefinition extends ParameterDefinitio
             return digest;
         }
         UsernamePasswordCredentials credentials = resolveCredentials(credentialsId);
-        RegistryClient client = new RegistryClient(credentials);
+        RegistryClient client = new RegistryClient(credentials, insecure);
         digest = client.getDigest(effectiveRef.withTag(tag));
         // In case of invalid default tag
         if (digest != null) {
@@ -84,7 +94,7 @@ public abstract class AbstractOrasParameterDefinition extends ParameterDefinitio
             return annotations;
         }
         UsernamePasswordCredentials credentials = resolveCredentials(credentialsId);
-        RegistryClient client = new RegistryClient(credentials);
+        RegistryClient client = new RegistryClient(credentials, insecure);
         annotations = client.getAnnotations(effectiveRef);
         OrasParameterCache.putAnnotations(effectiveRef.toString(), annotations);
         return annotations;
