@@ -112,7 +112,7 @@ public class OrasTagParameterDefinition extends AbstractOrasParameterDefinition 
 
     public TagsResponse getTags() {
         UsernamePasswordCredentials credentials = resolveCredentials(credentialsId);
-        RegistryClient client = new RegistryClient(credentials);
+        RegistryClient client = new RegistryClient(credentials, insecure);
         ContainerRef ref = ContainerRef.parse(containerRef);
         try {
             return TagsResponse.of(client, ref);
@@ -164,7 +164,10 @@ public class OrasTagParameterDefinition extends AbstractOrasParameterDefinition 
          */
         @POST
         public FormValidation doTestConnection(
-                @AncestorInPath Item item, @QueryParameter String containerRef, @QueryParameter String credentialsId) {
+                @AncestorInPath Item item,
+                @QueryParameter boolean insecure,
+                @QueryParameter String containerRef,
+                @QueryParameter String credentialsId) {
             if (item != null) {
                 item.checkPermission(Item.CONFIGURE);
             } else {
@@ -175,7 +178,7 @@ public class OrasTagParameterDefinition extends AbstractOrasParameterDefinition 
             }
             try {
                 UsernamePasswordCredentials credentials = resolveCredentials(credentialsId);
-                RegistryClient client = new RegistryClient(credentials);
+                RegistryClient client = new RegistryClient(credentials, insecure);
                 ContainerRef ref = ContainerRef.parse(containerRef);
                 List<String> tags = client.getTags(ref);
                 return FormValidation.ok("Success! Found " + tags.size() + " tags.");

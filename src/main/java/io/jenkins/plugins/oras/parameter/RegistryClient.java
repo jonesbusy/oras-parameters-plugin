@@ -23,8 +23,8 @@ public class RegistryClient {
      * Create a new registry client.
      * @param credentials The credentials to use
      */
-    public RegistryClient(UsernamePasswordCredentials credentials) {
-        this.registry = buildRegistry(credentials);
+    public RegistryClient(UsernamePasswordCredentials credentials, boolean insecure) {
+        this.registry = buildRegistry(credentials, insecure);
     }
 
     /**
@@ -94,10 +94,13 @@ public class RegistryClient {
         return "%s/%s".formatted(ref.getRegistry(), ref.getFullRepository());
     }
 
-    private Registry buildRegistry(UsernamePasswordCredentials credentials) {
-        Registry.Builder builder = Registry.builder();
+    private Registry buildRegistry(UsernamePasswordCredentials credentials, boolean insecure) {
+        Registry.Builder builder = Registry.builder().defaults();
+        if (insecure) {
+            builder = builder.insecure();
+        }
         if (credentials == null) {
-            return builder.defaults().build();
+            return builder.build();
         }
         return builder.defaults(
                         credentials.getUsername(), credentials.getPassword().getPlainText())

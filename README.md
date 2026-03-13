@@ -31,8 +31,6 @@ Authentication is optional and will use default credentials location if availabl
 
 See [ORAS Java SDK](https://github.com/oras-project/oras-java?tab=readme-ov-file#authentication) for more details.
 
-Insecure (HTTP only registries) are not supported at the moment (PR welcome)
-
 ## Environment vars
 
 When using ORAS Tag parameters the following env vars are available for the build:
