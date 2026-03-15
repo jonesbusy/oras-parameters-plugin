@@ -50,12 +50,6 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
-      <!-- Until on bom -->
-      <dependency>
-        <groupId>io.jenkins.plugins</groupId>
-        <artifactId>oras-java-api</artifactId>
-        <version>0.5.0-171.v3a_b_b_986a_7890</version>
-      </dependency>
     </dependencies>
   </dependencyManagement>
 
