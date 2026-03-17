@@ -50,6 +50,7 @@ In addition when selecting ORAS platform parameter the following env vars are av
 - `<PARAMETER_NAME>_PLATFORM_OS` the selected OS of the platform such as `linux` (always set)
 - `<PARAMETER_NAME>_PLATFORM_ARCH` the selected ARCH of the platform such as `amd64` (always set)
 - `<PARAMETER_NAME>_PLATFORM_VARIANT` the selected VARIANT of the platform such as `v8` (if available)
+- `<PARAMETER_NAME>_PLATFORM_OS_VERSION` the selected os version of the platform such as `12.0` (if available)
 
 ## Contributing
 

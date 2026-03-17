@@ -19,6 +19,7 @@
                 <li><strong>PARAMETER_NAME_PLATFORM_OS</strong> Selected os such as linux (always set)</li>
                 <li><strong>PARAMETER_NAME_PLATFORM_ARCH</strong> Selected arch such as arm64 (always set)</li>
                 <li><strong>PARAMETER_NAME_PLATFORM_VARIANT</strong> Selected variant such as v7 (if available)</li>
+                <li><strong>PARAMETER_NAME_PLATFORM_OS_VERSION</strong> Selected OS version such as 12.0 (if available)</li>
             </ul>
         </p>
     </div>

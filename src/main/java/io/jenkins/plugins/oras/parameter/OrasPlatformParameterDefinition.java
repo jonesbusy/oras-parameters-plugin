@@ -134,12 +134,15 @@ public class OrasPlatformParameterDefinition extends AbstractOrasParameterDefini
         private final String os;
         private final String architecture;
         private final @Nullable String variant;
+        private final @Nullable String osVersion;
         private final String digest;
 
-        public PlatformWrapper(String os, String architecture, @Nullable String variant, String digest) {
+        public PlatformWrapper(
+                String os, String architecture, @Nullable String variant, @Nullable String osVersion, String digest) {
             this.os = os;
             this.architecture = architecture;
             this.variant = variant;
+            this.osVersion = osVersion;
             this.digest = digest;
         }
 
@@ -156,6 +159,11 @@ public class OrasPlatformParameterDefinition extends AbstractOrasParameterDefini
             return variant;
         }
 
+        @Nullable
+        public String getOsVersion() {
+            return osVersion;
+        }
+
         public String getDigest() {
             return digest;
         }
@@ -166,19 +174,34 @@ public class OrasPlatformParameterDefinition extends AbstractOrasParameterDefini
                 throw new IllegalArgumentException("Invalid platform parameter: " + value);
             }
             if (parts.length == 2) {
-                return new PlatformWrapper(parts[0], parts[1], null, digest);
+                String osVersion = null;
+                if (parts[1].contains(":")) {
+                    osVersion = parts[1].split(":")[1];
+                    parts[1] = parts[1].split(":")[0];
+                }
+                return new PlatformWrapper(parts[0], parts[1], null, osVersion, digest);
             }
-            return new PlatformWrapper(parts[0], parts[1], parts[2], digest);
+            String osVersion = null;
+            if (parts[2].contains(":")) {
+                osVersion = parts[2].split(":")[1];
+                parts[2] = parts[2].split(":")[0];
+            }
+            return new PlatformWrapper(parts[0], parts[1], parts[2], osVersion, digest);
         }
 
         public static PlatformWrapper of(Platform platform) {
-            return new PlatformWrapper(platform.os(), platform.architecture(), platform.variant(), null);
+            return new PlatformWrapper(
+                    platform.os(), platform.architecture(), platform.variant(), platform.osVersion(), null);
         }
 
         public static PlatformWrapper of(ManifestDescriptor manifestDescriptor) {
             Platform platform = manifestDescriptor.getPlatform();
             return new PlatformWrapper(
-                    platform.os(), platform.architecture(), platform.variant(), manifestDescriptor.getDigest());
+                    platform.os(),
+                    platform.architecture(),
+                    platform.variant(),
+                    platform.osVersion(),
+                    manifestDescriptor.getDigest());
         }
 
         public static PlatformWrapper select(List<PlatformWrapper> values, String value) {
@@ -187,7 +210,9 @@ public class OrasPlatformParameterDefinition extends AbstractOrasParameterDefini
                     .filter(v -> v.os.equals(wrapper.os)
                             && v.architecture.equals(wrapper.architecture)
                             && ((v.variant == null && wrapper.variant == null)
-                                    || (v.variant != null && v.variant.equals(wrapper.variant))))
+                                    || (v.variant != null && v.variant.equals(wrapper.variant)))
+                            && ((v.osVersion == null && wrapper.osVersion == null)
+                                    || (v.osVersion != null && v.osVersion.equals(wrapper.osVersion))))
                     .findFirst()
                     .orElse(PlatformWrapper.of(Platform.unknown()));
         }
@@ -200,7 +225,13 @@ public class OrasPlatformParameterDefinition extends AbstractOrasParameterDefini
         @Override
         public @NonNull String toString() {
             if (variant == null) {
+                if (osVersion != null) {
+                    return "%s/%s:%s".formatted(os, architecture, osVersion);
+                }
                 return "%s/%s".formatted(os, architecture);
+            }
+            if (osVersion != null) {
+                return "%s/%s/%s:%s".formatted(os, architecture, variant, osVersion);
             }
             return "%s/%s/%s".formatted(os, architecture, variant);
         }
