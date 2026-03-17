@@ -41,5 +41,8 @@ public class OrasPlatformParameterValue extends AbstractOrasParameterValue {
         if (platform.getVariant() != null) {
             vars.put(name + "_PLATFORM_VARIANT", platform.getVariant());
         }
+        if (platform.getOsVersion() != null) {
+            vars.put(name + "_PLATFORM_OS_VERSION", platform.getOsVersion());
+        }
     }
 }
