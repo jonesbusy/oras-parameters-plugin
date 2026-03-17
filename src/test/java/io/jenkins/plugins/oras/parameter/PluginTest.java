@@ -3,6 +3,9 @@ package io.jenkins.plugins.oras.parameter;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
+import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
+import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import hudson.model.FreeStyleBuild;
 import hudson.model.FreeStyleProject;
 import hudson.model.ParametersDefinitionProperty;
@@ -15,6 +18,7 @@ import org.jvnet.hudson.test.JenkinsRule;
 import org.jvnet.hudson.test.junit.jupiter.WithJenkins;
 
 @WithJenkins
+@WireMockTest
 class PluginTest {
 
     @Test
@@ -226,5 +230,49 @@ class PluginTest {
         rule.assertLogContains("DIGEST=sha256:a3ce6b38d4c510ea9fdc0449b942ea44fb790f157e79b5e7e30b1e7460fe5579", run);
         rule.assertLogContains("PLATFORM_OS=linux", run);
         rule.assertLogContains("PLATFORM_ARCH=amd64", run);
+    }
+
+    @Test
+    void testPluginWithPipelineJobAndCatalog(JenkinsRule rule, WireMockRuntimeInfo wmRuntimeInfo) throws Exception {
+
+        // Catalog url
+        WireMock wireMock = wmRuntimeInfo.getWireMock();
+        String registry = wmRuntimeInfo.getHttpBaseUrl().replaceAll("http://", "");
+        wireMock.register(WireMock.get(WireMock.anyUrl()).willReturn(WireMock.okJson("""
+                        {
+                            "repositories": [
+                                "my-repo1",
+                                "my-repo1"
+                            ]
+                        }
+                        """)));
+
+        String pipelineScript = """
+                pipeline {
+                    agent any
+                    parameters {
+                        orasRepositoryParameter(name: 'ORAS_PARAM', description: 'An ORAS repository', containerRef: '%s', insecure: true)
+                    }
+                    stages {
+                        stage('Print') {
+                            steps {
+                                echo "RESOLVED=${params.ORAS_PARAM}"
+                                sh '''
+                                    echo "REGISTRY=$ORAS_PARAM_REGISTRY"
+                                    echo "REPOSITORY=$ORAS_PARAM_REPOSITORY"
+                                 '''
+                            }
+                        }
+                    }
+                }
+                """.formatted(registry);
+
+        // Create job, run it and assert logs
+        WorkflowJob job = rule.createProject(WorkflowJob.class);
+        job.setDefinition(new org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition(pipelineScript, true));
+        WorkflowRun run = rule.buildAndAssertSuccess(job);
+        rule.assertLogContains("RESOLVED=%s/my-repo1".formatted(registry), run);
+        rule.assertLogContains("REGISTRY=%s".formatted(registry), run);
+        rule.assertLogContains("REPOSITORY=my-repo1", run);
     }
 }

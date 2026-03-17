@@ -1,0 +1,28 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
+    <f:entry title="${it.name}" description="${it.description}">
+        <div name="parameter">
+            <input type="hidden" name="name" value="${it.name}"/>
+            <j:set var="repositoriesResponse" value="${it.repositories}"/>
+            <div class="jenkins-select">
+                <select class="jenkins-select__input" name="value">
+                    <j:choose>
+                        <j:when test="${!empty(repositoriesResponse)}">
+                            <j:forEach var="repository" items="${repositoriesResponse}">
+                                <f:option value="${repository}">${repository}</f:option>
+                            </j:forEach>
+                        </j:when>
+                        <j:otherwise>
+                            <option value="">No repository available</option>
+                        </j:otherwise>
+                    </j:choose>
+                </select>
+            </div>
+        </div>
+        <div class="jenkins-!-margin-top-1 jenkins-!-text-color-secondary">
+            <span style="font-family: monospace;">
+                ${it.containerRef}
+            </span>
+        </div>
+    </f:entry>
+</j:jelly>

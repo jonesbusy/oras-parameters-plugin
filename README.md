@@ -27,6 +27,12 @@ This will render a dropdown with the available tags for the selected chart.
 
 ![](docs/dropdown.png)
 
+The repository parameter allow to list available repositories in a registry.
+
+Note this is not supported on multi-tenant registries such as GHCR or Docker.io
+
+![](docs/repositories.png)
+
 Authentication is optional and will use default credentials location if available on the controller.
 
 See [ORAS Java SDK](https://github.com/oras-project/oras-java?tab=readme-ov-file#authentication) for more details.

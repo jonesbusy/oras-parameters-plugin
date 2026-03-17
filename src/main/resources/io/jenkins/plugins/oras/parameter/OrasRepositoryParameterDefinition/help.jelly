@@ -1,0 +1,17 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core">
+    <div>
+        <p>
+            This parameter allows you to select an ORAS repository from a registry.
+            Note that some multitenant registries (like docker.io) don't allow listing repositories.
+        </p>
+        <p>
+            This expose to every build the following environment variables (with <strong>PARAMETER_NAME</strong> replaced by the actual parameter name):
+            <ul>
+                <li><strong>PARAMETER_NAME</strong> name of the repository (always set)</li>
+                <li><strong>PARAMETER_NAME_REGISTRY</strong> the registry (always set)</li>
+                <li><strong>PARAMETER_NAME_REPOSITORY</strong> same as PARAMETER_NAME (always set)</li>
+            </ul>
+        </p>
+    </div>
+</j:jelly>

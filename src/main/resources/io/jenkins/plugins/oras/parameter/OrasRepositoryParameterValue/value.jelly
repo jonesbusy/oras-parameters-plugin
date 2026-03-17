@@ -1,0 +1,8 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
+    <j:set var="escapeEntryTitleAndDescription" value="true"/>
+    <f:entry title="${h.escape(it.name)}" description="${it.formattedDescription}">
+        <j:set var="readOnlyMode" value="true"/>
+        <f:textarea name="value" value="${it.repository}"/>
+    </f:entry>
+</j:jelly>

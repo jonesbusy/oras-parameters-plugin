@@ -42,9 +42,9 @@ public abstract class AbstractOrasParameterValue extends ParameterValue {
     /**
      * Get the full image reference (e.g., quay.io/org/repo:tag)
      */
-    public final String getImageReference() {
+    public String getImageReference() {
         if (digest == null) {
-            return "%s/%s:%s".formatted(registry, repository, tag);
+            return "%s/%s:%s".formatted(registry, repository, getTag());
         }
         return "%s/%s@%s".formatted(registry, repository, getDigest());
     }
@@ -151,7 +151,9 @@ public abstract class AbstractOrasParameterValue extends ParameterValue {
         vars.put(name, p.getImageReference());
         vars.put(name + "_REGISTRY", p.getRegistry());
         vars.put(name + "_REPOSITORY", p.getRepository());
-        vars.put(name + "_TAG", p.getTag());
+        if (p.getTag() != null) {
+            vars.put(name + "_TAG", p.getTag());
+        }
         if (p.getDigest() != null) {
             vars.put(name + "_DIGEST", p.getDigest());
         }

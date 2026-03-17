@@ -44,6 +44,15 @@ public class RegistryClient {
     }
 
     /**
+     * Return the list of repositories of the given registry
+     * @param registry The registry
+     * @return List of repositories
+     */
+    public List<String> getRepositories(String registry) {
+        return this.registry.copy(registry).getRepositories().repositories();
+    }
+
+    /**
      * Return the platforms descriptor for the given index
      * @param containerRef The reference
      * @return The list of platform
